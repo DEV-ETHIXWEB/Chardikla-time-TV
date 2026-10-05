@@ -37,7 +37,7 @@ export default async function SiteFooter() {
               ਸੰਪਰਕ:{" "}
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="font-medium text-brand-ink hover:text-accent-ink"
+                className="inline-flex min-h-6 items-center font-medium text-brand-ink hover:text-accent-ink"
               >
                 {CONTACT_EMAIL}
               </a>

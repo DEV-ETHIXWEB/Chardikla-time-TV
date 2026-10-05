@@ -4,19 +4,56 @@ import { useEffect, useState } from "react";
 import { formatDayLine } from "@/lib/format";
 
 /**
- * Rendered client-side only. A server-rendered clock would be wrong the moment
- * the page is cached, and this page is cached aggressively.
+ * Date and running clock in the masthead, in IST.
+ *
+ * Client-only on purpose: a server-rendered clock is wrong the moment the page
+ * is cached, and these pages are cached hard. The markup reserves its height
+ * so the bar does not jump when the time arrives after hydration.
  */
 export default function LiveClock() {
-  const [stamp, setStamp] = useState<string>("");
+  const [day, setDay] = useState("");
+  const [time, setTime] = useState("");
 
   useEffect(() => {
-    const tick = () => setStamp(formatDayLine());
+    const tick = () => {
+      setDay(formatDayLine());
+      try {
+        // en-GB is used for the numerals and then rendered beside Punjabi text;
+        // Chromium has no `pa` locale data, so asking for it yields "M10 4".
+        setTime(
+          new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Asia/Kolkata",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+          })
+            .format(new Date())
+            .toUpperCase(),
+        );
+      } catch {
+        setTime("");
+      }
+    };
     tick();
-    const id = setInterval(tick, 60_000);
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);
 
-  // Reserve the row height so the bar does not jump when the clock arrives.
-  return <span className="min-h-4 truncate">{stamp || " "}</span>;
+  return (
+    <span className="flex min-h-4 items-center gap-2 truncate">
+      <span className="truncate">{day || " "}</span>
+      {time && (
+        <>
+          <span aria-hidden="true" className="text-white/60">
+            |
+          </span>
+          <time className="tabular-nums text-white/90" suppressHydrationWarning>
+            {time}
+          </time>
+          <span className="hidden text-white/75 xs:inline">IST</span>
+        </>
+      )}
+    </span>
+  );
 }

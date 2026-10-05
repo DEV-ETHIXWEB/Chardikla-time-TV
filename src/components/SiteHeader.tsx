@@ -5,6 +5,7 @@ import HeaderNav from "./HeaderNav";
 import HeaderSearch from "./HeaderSearch";
 import LiveClock from "./LiveClock";
 import SocialLinks from "./SocialLinks";
+import ThemeToggle from "./ThemeToggle";
 
 /**
  * Server component so the category list is in the HTML. The old site had no
@@ -40,6 +41,7 @@ export default async function SiteHeader() {
               className="hidden sm:flex"
               itemClassName="text-white/80 hover:text-accent-on-dark"
             />
+            <ThemeToggle />
           </div>
         </div>
       </div>

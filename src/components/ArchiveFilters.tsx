@@ -61,6 +61,9 @@ export default function ArchiveFilters({
     // No setState for the invalid case: the render below checks `invalid`
     // first, so a stale count can never reach the screen anyway.
     if (invalid) return;
+    // Counting hits the protected export endpoint, so it is for the admin
+    // portal only; the public page would just log a 401.
+    if (!showDownloads) return;
 
     let cancelled = false;
     // setCounting lives inside the timeout, not the effect body: a synchronous
@@ -81,7 +84,7 @@ export default function ArchiveFilters({
       cancelled = true;
       clearTimeout(id);
     };
-  }, [params, invalid]);
+  }, [params, invalid, showDownloads]);
 
   const apply = () => {
     if (invalid) return;
@@ -166,7 +169,9 @@ export default function ArchiveFilters({
           <span>
             {invalid
               ? "ਸਹੀ ਤਾਰੀਖ਼ ਚੁਣੋ"
-              : counting
+              : !showDownloads
+                ? "\u00a0"
+                : counting
                 ? "ਗਿਣਤੀ ਹੋ ਰਹੀ ਹੈ…"
                 : count === null
                   ? "\u00a0"

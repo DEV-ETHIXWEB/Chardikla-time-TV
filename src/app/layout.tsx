@@ -63,6 +63,15 @@ export default function RootLayout({
   return (
     <html lang="pa-IN" className={`${gurmukhi.variable} ${latin.variable}`}>
       <head>
+        {/* Applies the saved theme before first paint. Running this in a
+            component instead would render the wrong colours for one frame on
+            every load, which is what makes a dark theme feel broken. It is
+            deliberately tiny, synchronous and failure-tolerant. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("ctv-theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();`,
+          }}
+        />
         {/* The images still come from the WordPress origin, so warm it early. */}
         <link rel="preconnect" href="https://timetv.news" />
         <link rel="dns-prefetch" href="https://timetv.news" />

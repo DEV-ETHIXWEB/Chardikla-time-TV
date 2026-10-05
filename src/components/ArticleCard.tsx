@@ -118,7 +118,7 @@ export default function ArticleCard({
           </div>
         </Link>
         <div className="min-w-0 flex-1">
-          <Link href={article.path}>
+          <Link href={article.path} className="block py-0.5">
             <h3 className="clamp-3 text-[0.9375rem] font-semibold leading-snug text-ink decoration-brand-ink/40 underline-offset-2 transition-colors group-hover:text-brand-ink group-hover:underline">
               {article.title}
             </h3>
