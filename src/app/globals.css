@@ -1,26 +1,386 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------------------------------------------ *
+ * Design tokens
+ * Brand colours are sampled from the Chardikla Time TV logo: the deep
+ * blue of the plate and the orange of the clock mark.
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-brand-50: #eef0ff;
+  --color-brand-100: #dde0ff;
+  --color-brand-500: #2525b8;
+  --color-brand-600: #16169f;
+  /* Surface role: white text sits ON this. Dark blue in both themes
+     (white on #0c0c9c is 13.56:1). */
+  --color-brand: #0c0c9c;
+  /* Text role: this sits ON the page surface. Re-tinted for dark mode below. */
+  --color-brand-ink: #0c0c9c;
+  --color-brand-800: #08086e;
+  --color-brand-900: #050547;
+
+  /* The logo orange. Decorative only — it fails AA for text, so anything
+     carrying words uses --color-accent-ink instead. Measured: white on
+     #fc600c is 3.08:1, and #fc600c on white is 3.08:1. */
+  --color-accent: #fc600c;
+  /* Surface role: white text sits ON this, in both themes (5.18:1). */
+  --color-accent-chip: #c2410c;
+  /* Text role: sits ON the page surface. Re-tinted for dark mode below. */
+  --color-accent-ink: #c2410c;
+  /* For the blue masthead bar: the logo orange is only 4.40:1 on brand blue,
+     just under AA, so text there uses this lighter tint at 5.87:1. */
+  --color-accent-on-dark: #ff8c42;
+  --color-accent-600: #a63500;
+  --color-accent-50: #fff3eb;
+
+  /* Surface role: white text sits on this (5.15:1). */
+  --color-live: #d81920;
+  /* Text role: 4.80:1 on the light surface, re-tinted for dark below. */
+  --color-live-ink: #d81920;
+
+  --color-ink: #14161a;
+  --color-ink-soft: #4a5260;
+  /* Was #767f8c — 4.05:1 on white, below AA. #656e7c is 5.15:1 on white
+     and 4.81:1 on --color-surface-soft. */
+  --color-ink-faint: #656e7c;
+  --color-line: #e3e6ec;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f6f7f9;
+
+  --font-sans: var(--font-latin), ui-sans-serif, system-ui, sans-serif;
+  --font-gurmukhi: var(--font-gurmukhi), var(--font-latin), sans-serif;
+
+  --breakpoint-xs: 26rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Dark mode. News readers scroll at night; this is not decoration. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --color-ink: #eef1f6;
+    --color-ink-soft: #aab3c0;
+    --color-ink-faint: #8b94a2;
+    --color-line: #262b33;
+    --color-surface: #0e1013;
+    --color-surface-soft: #171a1f;
+    /* Brand blue and the dark-orange accent are tuned for white backgrounds;
+       on the dark surface they measure 1.40:1 and 3.68:1. These tints restore
+       AA without changing the brand on the light theme. */
+    /* Only the TEXT role is re-tinted: #0c0c9c on the dark surface is 1.40:1,
+       while #8f8fff is 6.84:1. --color-brand keeps its value so buttons still
+       carry white text at 13.56:1. */
+    --color-brand-ink: #8f8fff;
+    /* Text role only. --color-accent-chip keeps its darker value so chips
+       still carry white text; #ff8c42 behind white is only 2.31:1. */
+    --color-accent-ink: #ff8c42;
+    /* #d81920 as text on the dark surface is only 3.39:1. */
+    --color-live-ink: #ff7a7a;
   }
 }
 
+:root[data-theme="dark"] {
+  --color-ink: #eef1f6;
+  --color-ink-soft: #aab3c0;
+  --color-ink-faint: #8b94a2;
+  --color-line: #262b33;
+  --color-surface: #0e1013;
+  --color-surface-soft: #171a1f;
+    /* Brand blue and the dark-orange accent are tuned for white backgrounds;
+       on the dark surface they measure 1.40:1 and 3.68:1. These tints restore
+       AA without changing the brand on the light theme. */
+    /* Only the TEXT role is re-tinted: #0c0c9c on the dark surface is 1.40:1,
+       while #8f8fff is 6.84:1. --color-brand keeps its value so buttons still
+       carry white text at 13.56:1. */
+    --color-brand-ink: #8f8fff;
+    /* Text role only. --color-accent-chip keeps its darker value so chips
+       still carry white text; #ff8c42 behind white is only 2.31:1. */
+    --color-accent-ink: #ff8c42;
+    /* #d81920 as text on the dark surface is only 3.39:1. */
+    --color-live-ink: #ff7a7a;
+}
+
+@theme inline {
+  --color-background: var(--color-surface);
+  --color-foreground: var(--color-ink);
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-gurmukhi);
+  /* Gurmukhi carries marks above and below the baseline, so it needs more
+     leading than a Latin-only stack would. */
+  line-height: 1.75;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Hide scrollbars on the horizontally scrolling category nav. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Clamp helpers used across cards. */
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ *
+ * Article body
+ * WordPress hands us plain <p> markup, so the styling lives here rather
+ * than inline, which is what let the old theme ship 81 <style> blocks.
+ * ------------------------------------------------------------------ */
+.article-body {
+  font-size: 1.125rem;
+  line-height: 1.95;
+  color: var(--color-ink);
+}
+
+.article-body > * + * {
+  margin-top: 1.25em;
+}
+
+.article-body p {
+  text-align: start;
+}
+
+.article-body strong,
+.article-body b {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.article-body a {
+  color: var(--color-brand-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.article-body h2,
+.article-body h3,
+.article-body h4 {
+  font-weight: 700;
+  line-height: 1.45;
+  margin-top: 1.8em;
+  color: var(--color-ink);
+}
+
+.article-body h2 {
+  font-size: 1.5rem;
+}
+.article-body h3 {
+  font-size: 1.25rem;
+}
+
+.article-body img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin-block: 1.5em;
+  /* Source photos are small and get upscaled; this keeps browser resampling
+     from adding its own softness on top. */
+  image-rendering: auto;
+}
+
+.article-body figure {
+  margin-block: 1.5em;
+}
+
+.article-body figcaption {
+  font-size: 0.875rem;
+  color: var(--color-ink-faint);
+  margin-top: 0.5em;
+  text-align: center;
+}
+
+.article-body blockquote {
+  border-inline-start: 4px solid var(--color-accent-ink);
+  padding-inline-start: 1.25rem;
+  margin-inline: 0;
+  color: var(--color-ink-soft);
+  font-style: normal;
+}
+
+.article-body ul,
+.article-body ol {
+  padding-inline-start: 1.5rem;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li + li {
+  margin-top: 0.5em;
+}
+
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+.article-body td,
+.article-body th {
+  border: 1px solid var(--color-line);
+  padding: 0.5rem 0.75rem;
+}
+
+.embed-responsive {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-block: 1.5em;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--color-surface-soft);
+}
+
+.embed-responsive iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Hero overlay text sits on an arbitrary news photo, so the gradient alone
+   cannot guarantee legibility — a light image behind the meta row leaves the
+   timestamp washed out. Contrast checkers cannot evaluate text over images,
+   so this is belt-and-braces rather than something axe would flag. */
+.on-photo {
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 55%),
+    0 2px 10px rgb(0 0 0 / 35%);
+}
+
+/* ------------------------------------------------------------------ *
+ * Print / Save-as-PDF
+ * The browser's print pipeline is how this site produces PDFs, because it
+ * is the only renderer here that shapes Gurmukhi correctly.
+ * ------------------------------------------------------------------ */
+
+/* The print view hides site chrome on screen too, so the preview matches
+   the output. :has() keeps this to CSS rather than threading a body class
+   through the root layout. */
+body:has(.print-view) > header,
+body:has(.print-view) > footer {
+  display: none;
+}
+
+@page {
+  size: A4;
+  margin: 14mm 12mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Site chrome only — direct children of body. Scoping this matters: an
+     unqualified `header, footer` also hid the print document's own masthead
+     and credit line, so the PDF came out unbranded. */
+  body > header,
+  body > footer,
+  body > nav,
+  .ticker-track,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: #000 !important;
+  }
+
+  /* Entries should not be cut in half by a page break. */
+  li,
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  h1,
+  h2 {
+    break-after: avoid;
+  }
+
+  .print-body img {
+    display: none;
+  }
+}
+
+/* Marquee for the breaking-news ticker. */
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: inline-flex;
+  animation: ticker 45s linear infinite;
+  will-change: transform;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
 }

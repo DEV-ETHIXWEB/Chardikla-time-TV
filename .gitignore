@@ -32,6 +32,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# but the template ships — every project must carry one (no values in it)
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +41,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Internal EthixWeb working documents — checklists, SOPs, security prompts.
+# Their own standard: "No internal audit docs, handover notes, or scratch
+# files committed to a repo that will go public."
+MY SKILLS _AKASH/
