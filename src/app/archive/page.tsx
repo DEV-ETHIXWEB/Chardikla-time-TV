@@ -68,8 +68,7 @@ export default async function ArchivePage({ searchParams }: Props) {
           ਪੁਰਾਣੀਆਂ ਖ਼ਬਰਾਂ
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">
-          ਤਾਰੀਖ਼ ਚੁਣੋ ਅਤੇ ਉਸ ਸਮੇਂ ਦੀਆਂ ਸਾਰੀਆਂ ਖ਼ਬਰਾਂ ਵੇਖੋ। ਤੁਸੀਂ ਇਹਨਾਂ ਨੂੰ Excel (CSV)
-          ਜਾਂ JSON ਫਾਈਲ ਵਿੱਚ ਡਾਊਨਲੋਡ ਵੀ ਕਰ ਸਕਦੇ ਹੋ।
+          ਤਾਰੀਖ਼ ਚੁਣੋ ਅਤੇ ਉਸ ਸਮੇਂ ਦੀਆਂ ਸਾਰੀਆਂ ਖ਼ਬਰਾਂ ਵੇਖੋ।
         </p>
       </header>
 
@@ -78,6 +77,7 @@ export default async function ArchivePage({ searchParams }: Props) {
         from={from}
         to={to}
         category={category}
+        showDownloads={false}
       />
 
       <div className="mt-8">

@@ -316,7 +316,9 @@ body {
    the output. :has() keeps this to CSS rather than threading a body class
    through the root layout. */
 body:has(.print-view) > header,
-body:has(.print-view) > footer {
+body:has(.print-view) > footer,
+body:has(.admin-view) > header,
+body:has(.admin-view) > footer {
   display: none;
 }
 

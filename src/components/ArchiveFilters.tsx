@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Term } from "@/lib/types";
@@ -30,11 +32,14 @@ export default function ArchiveFilters({
   from,
   to,
   category,
+  showDownloads = true,
 }: {
   categories: Term[];
   from: string;
   to: string;
   category: string;
+  /** Downloads live in the admin portal; the public page only browses. */
+  showDownloads?: boolean;
 }) {
   const router = useRouter();
   const [f, setF] = useState(from);
@@ -177,6 +182,7 @@ export default function ArchiveFilters({
           )}
         </div>
 
+        {showDownloads ? (
         <div className="ms-auto flex flex-wrap gap-2">
           <a
             href={`/api/export/?${params}&format=csv`}
@@ -223,6 +229,14 @@ export default function ArchiveFilters({
             ⬇ JSON
           </a>
         </div>
+        ) : (
+          <Link
+            href="/admin/login/"
+            className="ms-auto text-xs font-semibold text-brand-ink underline underline-offset-2"
+          >
+            ਡਾਊਨਲੋਡ ਕਰਨ ਲਈ ਐਡਮਿਨ ਲੌਗਇਨ ਕਰੋ →
+          </Link>
+        )}
       </div>
     </div>
   );
