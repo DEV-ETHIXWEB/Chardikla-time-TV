@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { unstable_rethrow } from "next/navigation";
 import ArchiveView from "@/components/ArchiveView";
 import { loadTermArchive } from "@/lib/archive";
-import { isNotFound } from "@/lib/notfound";
 import OriginDown from "@/components/OriginDown";
 import { metadataFromTerm } from "@/lib/seo";
 import { getCategories, getTermBySlug } from "@/lib/wp";
@@ -37,7 +37,7 @@ export default async function CategoryPage({ params }: Props) {
     // during prerender used to abort the entire build, which wiped the
     // previous good output and left nothing servable. `revalidate` on this
     // route re-renders the real page as soon as WordPress is reachable.
-    if (isNotFound(err)) throw err;
+    unstable_rethrow(err);
     return <OriginDown what="ਇਹ ਸ਼੍ਰੇਣੀ" />;
   }
   const { term, items, total, totalPages, page } = data;

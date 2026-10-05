@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, unstable_rethrow } from "next/navigation";
 import ArchiveView from "@/components/ArchiveView";
 import { loadTermArchive } from "@/lib/archive";
 import { metadataFromTerm } from "@/lib/seo";
 import { getTermBySlug } from "@/lib/wp";
-import { isNotFound } from "@/lib/notfound";
 import OriginDown from "@/components/OriginDown";
 
 export const revalidate = 120;
@@ -31,7 +30,7 @@ export default async function CategoryPagedPage({ params }: Props) {
   try {
     data = await loadTermArchive("categories", slug, page);
   } catch (err) {
-    if (isNotFound(err)) throw err;
+    unstable_rethrow(err);
     return <OriginDown what="ਇਹ ਸ਼੍ਰੇਣੀ" />;
   }
   const { term, items, total, totalPages } = data;

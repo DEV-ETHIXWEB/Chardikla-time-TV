@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, unstable_rethrow } from "next/navigation";
 import ArchiveView from "@/components/ArchiveView";
 import { loadTermArchive } from "@/lib/archive";
 import { metadataFromTerm } from "@/lib/seo";
 import { getTermBySlug } from "@/lib/wp";
-import { isNotFound } from "@/lib/notfound";
 import OriginDown from "@/components/OriginDown";
 
 export const revalidate = 300;
@@ -31,7 +30,7 @@ export default async function TagPagedPage({ params }: Props) {
   try {
     data = await loadTermArchive("tags", slug, page);
   } catch (err) {
-    if (isNotFound(err)) throw err;
+    unstable_rethrow(err);
     return <OriginDown what="ਇਹ ਟੈਗ" />;
   }
   const { term, items, total, totalPages } = data;

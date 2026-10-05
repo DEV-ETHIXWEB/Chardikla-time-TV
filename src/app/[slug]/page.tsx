@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, unstable_rethrow } from "next/navigation";
 import ArticleCard from "@/components/ArticleCard";
 import SectionHeading from "@/components/SectionHeading";
 import ShareBar from "@/components/ShareBar";
-import { isNotFound } from "@/lib/notfound";
 import {
   getPostBySlug,
   getPosts,
@@ -59,7 +58,7 @@ export default async function ArticlePage({ params }: Props) {
     article = await getPostBySlug(slug);
   } catch (err) {
     // See the category route: an origin outage must not fail the build.
-    if (isNotFound(err)) throw err;
+    unstable_rethrow(err);
     return <OriginDown what="ਇਹ ਖ਼ਬਰ" />;
   }
   if (!article) notFound();
