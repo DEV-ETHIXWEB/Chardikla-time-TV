@@ -19,7 +19,7 @@ export default async function HomePage() {
 
   if (latest.length === 0) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-20 text-center">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-20 text-center">
         <h1 className="text-xl font-bold">ਖ਼ਬਰਾਂ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀਆਂ</h1>
         <p className="mt-2 text-ink-soft">ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਦੇਰ ਬਾਅਦ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</p>
       </div>
@@ -38,7 +38,7 @@ export default async function HomePage() {
     <>
       <BreakingTicker items={latest.slice(0, 8)} />
 
-      <div className="mx-auto max-w-7xl px-4 py-7">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-7">
         <h1 className="sr-only">
           Chardikla Time TV — ਪੰਜਾਬੀ ਖ਼ਬਰਾਂ, ਤਾਜ਼ਾ ਖ਼ਬਰਾਂ ਅਤੇ ਲਾਈਵ ਨਿਊਜ਼
         </h1>

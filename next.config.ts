@@ -63,7 +63,13 @@ const nextConfig: NextConfig = {
      * HSTS over insecure transport, but Safari was observed refusing the
      * stylesheet and images anyway while the document rendered from cache.
      */
-    const isHttps = /^https:/i.test(process.env.NEXT_PUBLIC_SITE_URL ?? "");
+    const isHttps =
+      /^https:/i.test(process.env.NEXT_PUBLIC_SITE_URL ?? "") ||
+      // Same fallback as src/lib/seo.ts: a Vercel deployment is always https,
+      // even when NEXT_PUBLIC_SITE_URL has not been set in project settings.
+      Boolean(
+        process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL,
+      );
 
     const csp = [
       "default-src 'self'",

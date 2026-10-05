@@ -24,7 +24,7 @@ export default async function SearchPage({ searchParams }: Props) {
     : null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-8">
       <header className="mb-8 border-b-2 border-brand-ink pb-4">
         <h1 className="text-2xl font-bold text-ink sm:text-3xl">
           <span className="me-2.5 inline-block h-6 w-2 translate-y-0.5 bg-accent" />

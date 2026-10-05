@@ -12,7 +12,7 @@
  */
 export default function Loading() {
   return (
-    <div className="mx-auto max-w-7xl animate-pulse px-4 py-8">
+    <div className="mx-auto max-w-[1400px] animate-pulse px-4 py-8">
       <div className="mb-8 h-9 w-40 rounded bg-surface-soft" />
       <div className="grid gap-x-5 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 8 }).map((_, i) => (

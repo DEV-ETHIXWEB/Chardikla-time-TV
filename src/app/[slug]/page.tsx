@@ -101,7 +101,7 @@ export default async function ArticlePage({ params }: Props) {
         }}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-6">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-6">
         <nav aria-label="ਬਰੈੱਡਕਰੰਬ" className="mb-4 flex flex-wrap items-center gap-1.5 text-xs text-ink-faint">
           {trail.map((t, i) => (
             <span key={t.path} className="flex items-center gap-1.5">

@@ -61,7 +61,7 @@ export default async function ArchivePage({ searchParams }: Props) {
   const basePath = `/archive/?${base.toString()}`;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-8">
       <header className="mb-6">
         <h1 className="flex items-center gap-2.5 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
           <span className="inline-block h-6 w-2 rounded-full bg-accent" />

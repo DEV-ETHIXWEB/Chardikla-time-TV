@@ -2,8 +2,33 @@ import type { Metadata } from "next";
 import type { Article, Term, YoastHead } from "./types";
 import { truncate } from "./format";
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+/**
+ * The public origin, used for canonicals, OG tags, sitemaps and robots.txt.
+ *
+ * This must never silently fall back to localhost. It did on the first Vercel
+ * deploy — `NEXT_PUBLIC_SITE_URL` was not set in the project settings, so every
+ * canonical tag, OG url and sitemap entry on the live site pointed at
+ * http://localhost:3000. Google would have taken that at face value.
+ *
+ * So the host's own deployment URL is used when the variable is absent:
+ * `VERCEL_PROJECT_PRODUCTION_URL` is the stable production domain, `VERCEL_URL`
+ * the per-deployment one. Setting NEXT_PUBLIC_SITE_URL explicitly still wins,
+ * and is what you want once a custom domain is attached.
+ */
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  const vercelProd = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (vercelProd) return `https://${vercelProd.replace(/^https?:\/\//, "")}`;
+
+  const vercel = process.env.VERCEL_URL?.trim();
+  if (vercel) return `https://${vercel.replace(/^https?:\/\//, "")}`;
+
+  return "http://localhost:3000";
+}
+
+export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "Chardikla Time TV";
 export const SITE_TAGLINE = "ਪੰਜਾਬੀ ਖ਼ਬਰਾਂ | Latest Punjabi News";
 
