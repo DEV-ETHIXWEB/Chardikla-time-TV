@@ -115,8 +115,27 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * opens and subsequent calls fail instantly until the cooldown expires; one
  * success closes it again. Healthy traffic never notices it exists.
  */
-const BREAKER_THRESHOLD = Number(process.env.WP_BREAKER_FAILURES ?? 4);
-const BREAKER_COOLDOWN_MS = Number(process.env.WP_BREAKER_COOLDOWN_MS ?? 15_000);
+/**
+ * During a build the breaker is far more forgiving.
+ *
+ * Builds are sequential and long: a handful of slow calls early on is normal
+ * against this origin, but with a threshold of 4 the breaker opens and then
+ * short-circuits every remaining page. That is how a Vercel build baked an
+ * empty homepage — posts were short-circuited while categories, fetched
+ * earlier, had already succeeded — and visitors got "no news" from a cached
+ * prerender until ISR healed it.
+ *
+ * At request time the tight threshold is right: a reader must not wait on a
+ * dead origin. At build time, patience costs nothing and a wrong call poisons
+ * the whole deployment.
+ */
+const IS_BUILD = process.env.NEXT_PHASE === "phase-production-build";
+const BREAKER_THRESHOLD = Number(
+  process.env.WP_BREAKER_FAILURES ?? (IS_BUILD ? 40 : 4),
+);
+const BREAKER_COOLDOWN_MS = Number(
+  process.env.WP_BREAKER_COOLDOWN_MS ?? (IS_BUILD ? 3_000 : 15_000),
+);
 
 let consecutiveFailures = 0;
 let breakerOpenUntil = 0;

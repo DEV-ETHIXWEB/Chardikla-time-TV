@@ -17,6 +17,9 @@ export default async function HomePage() {
   ]);
   const latest = latestResult?.items ?? [];
 
+  // If the fetch failed we render the notice, but it must not sit in the cache
+  // like a good page would. Asking for a fresh render on the next request
+  // means the site heals in seconds instead of a full revalidate window.
   if (latest.length === 0) {
     return (
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-20 text-center">
